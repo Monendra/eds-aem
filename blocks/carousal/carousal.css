@@ -17,13 +17,14 @@
   cursor: pointer;
   font-size: 24px;
   z-index: 2;
-  color: #000;
+  color: #8B4513;
   transition: opacity 0.3s ease;
   font-weight: bold;
 }
 
 .btn:hover {
   opacity: 0.7;
+  color: #8B4513;
 }
 
 .btn-next {
