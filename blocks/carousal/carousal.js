@@ -1,10 +1,39 @@
 export default function decorate(block) {
+  [...block.children].forEach((row) => {
+    [...row.children].forEach((col) => {
+      // Handle content column
+      if (col === row.children[0]) {
+        // Style headings and CTA
+        const headings = col.querySelectorAll('h2');
+        headings.forEach((h2) => {
+          h2.classList.add('carousel-heading');
+        });
+
+        const cta = col.querySelector('h3');
+        if (cta) {
+          cta.classList.add('carousel-cta');
+          cta.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '#shop';
+          });
+        }
+      }
+      
+      // Handle image column
+      if (col === row.children[1]) {
+        const picture = col.querySelector('picture');
+        if (picture) {
+          picture.classList.add('carousel-image');
+        }
+      }
+    });
+  });
+
   // Create navigation dots
-  const slides = block.children;
   const dotsContainer = document.createElement('div');
   dotsContainer.className = 'dots';
   
-  Array.from(slides).forEach((_, index) => {
+  [...block.children].forEach((_, index) => {
     const dot = document.createElement('div');
     dot.className = `dot ${index === 0 ? 'active' : ''}`;
     dot.addEventListener('click', () => goToSlide(index));
@@ -13,57 +42,38 @@ export default function decorate(block) {
   
   block.appendChild(dotsContainer);
 
-  // Initialize variables
+  // Initialize carousel functionality
   let currentSlide = 0;
   let autoPlayInterval;
-  const autoPlayDelay = 5000; // 5 seconds
+  const autoPlayDelay = 5000;
 
-  // Function to go to a specific slide
   function goToSlide(index) {
-    // Hide current slide
-    slides[currentSlide].style.opacity = '0';
-    const currentDot = dotsContainer.children[currentSlide];
-    currentDot.classList.remove('active');
+    block.children[currentSlide].style.opacity = '0';
+    dotsContainer.children[currentSlide].classList.remove('active');
 
-    // Show new slide
     currentSlide = index;
-    slides[currentSlide].style.opacity = '1';
-    const newDot = dotsContainer.children[currentSlide];
-    newDot.classList.add('active');
+    block.children[currentSlide].style.opacity = '1';
+    dotsContainer.children[currentSlide].classList.add('active');
   }
 
-  // Function to go to next slide
   function nextSlide() {
-    const nextIndex = (currentSlide + 1) % slides.length;
+    const nextIndex = (currentSlide + 1) % block.children.length;
     goToSlide(nextIndex);
   }
 
-  // Start autoplay
   function startAutoPlay() {
     autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
   }
 
-  // Pause autoplay on hover
+  // Handle hover interactions
   block.addEventListener('mouseenter', () => {
     clearInterval(autoPlayInterval);
   });
 
-  // Resume autoplay on mouse leave
   block.addEventListener('mouseleave', () => {
     startAutoPlay();
   });
 
-  // Initialize autoplay
+  // Start the carousel
   startAutoPlay();
-
-  // Make Shop Now button clickable
-  const shopNowButton = block.querySelector('h3');
-  if (shopNowButton) {
-    shopNowButton.style.cursor = 'pointer';
-    shopNowButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Add your shop now link here
-      window.location.href = '#shop';
-    });
-  }
 } 
