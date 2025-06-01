@@ -47,31 +47,14 @@ export default function decorate(block) {
     }
   });
 
-  // Create navigation dots
-  const dotsContainer = document.createElement('div');
-  dotsContainer.className = 'dots';
-  
-  // Only create dots for content slides (excluding navigation buttons)
-  const contentSlides = [...block.querySelectorAll('.slide')];
-  contentSlides.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.className = `dot ${index === 0 ? 'active' : ''}`;
-    dot.addEventListener('click', () => goToSlide(index));
-    dotsContainer.appendChild(dot);
-  });
-  
-  block.appendChild(dotsContainer);
-
   // Initialize carousel functionality
   let currentSlide = 0;
+  const contentSlides = [...block.querySelectorAll('.slide')];
 
   function goToSlide(index) {
     contentSlides[currentSlide].style.opacity = '0';
-    dotsContainer.children[currentSlide].classList.remove('active');
-
     currentSlide = index;
     contentSlides[currentSlide].style.opacity = '1';
-    dotsContainer.children[currentSlide].classList.add('active');
   }
 
   // Add click handlers for navigation buttons
