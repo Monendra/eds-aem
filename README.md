@@ -1,4 +1,20 @@
 # Your Project's Title...
+
+![AEM](https://raw.githubusercontent.com/adobe/aem-boilerplate/main/.github/logo.png)
+
+<!--
+Please replace the title above and remove this comment.
+-->
+
+## Table of Contents
+- [Project's Title...](#your-projects-title)
+- [Environments](#environments)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Linting](#linting)
+- [Local development](#local-development)
+
+## Your project's description...
 Your project's description...
 
 ## Environments

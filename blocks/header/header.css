@@ -139,7 +139,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 header .nav-brand {
   grid-area: brand;
   flex-basis: 128px;
-  font-size: var(--heading-font-size-s);
+  font-family: 'Arial', sans-serif;
+  font-size: 1.5rem;
+  color: #000;
   font-weight: 700;
   line-height: 1;
 }
@@ -167,6 +169,9 @@ header nav .nav-sections ul {
   list-style: none;
   padding-left: 0;
   font-size: var(--body-font-size-s);
+  display: flex;
+  gap: 2rem;
+  align-items: center;
 }
 
 header nav .nav-sections ul > li {
@@ -265,4 +270,16 @@ header nav .nav-sections ul > li > ul > li {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+header nav .nav-item a {
+  font-size: 1rem;
+  color: #333;
+}
+
+header nav .nav-item a:hover {
+  color: #000;
 }
