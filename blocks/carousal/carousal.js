@@ -3,17 +3,19 @@ export default function decorate(block) {
   
   [...block.children].forEach((row, r) => {
     if (r === 0) {
-      // Create next button
+      // Create next button using authored content
       const nextBtn = document.createElement('button');
       nextBtn.classList.add('btn', 'btn-next');
-      const nextNode = document.createTextNode('Next');
+      const nextContent = row.textContent.trim();
+      const nextNode = document.createTextNode(nextContent);
       nextBtn.append(nextNode);
       row.replaceWith(nextBtn);
     } else if (r === rows.length - 1) {
-      // Create previous button
+      // Create previous button using authored content
       const prevBtn = document.createElement('button');
       prevBtn.classList.add('btn', 'btn-prev');
-      const prevNode = document.createTextNode('Previous');
+      const prevContent = row.textContent.trim();
+      const prevNode = document.createTextNode(prevContent);
       prevBtn.append(prevNode);
       row.replaceWith(prevBtn);
     } else {
