@@ -73,26 +73,32 @@
   object-fit: cover;
 }
 
-/* Navigation dots */
-.carousal .dots {
+/* Navigation Dots */
+.dots {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   left: 60px;
   display: flex;
   gap: 12px;
+  z-index: 2;
 }
 
-.carousal .dot {
-  width: 10px;
-  height: 10px;
+.dot {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #CCCCCC;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.carousal .dot.active {
-  background-color: #2940D3;
+.dot.active {
+  background-color: #000000;
+}
+
+/* Hover effect */
+.dot:hover {
+  background-color: #666666;
 }
 
 /* Responsive design */
