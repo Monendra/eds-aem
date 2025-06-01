@@ -40,6 +40,7 @@ export default function decorate(block) {
         }
         
         if (c === 1) {
+          col.classList.add('slide-image');
           const picture = col.querySelector('picture');
           if (picture) {
             picture.classList.add('carousel-image');
@@ -51,12 +52,24 @@ export default function decorate(block) {
 
   // Initialize carousel functionality
   let currentSlide = 0;
-  const contentSlides = [...block.querySelectorAll('.slide')];
+  const slides = [...block.querySelectorAll('.slide')];
+  
+  // Make all slides visible but with opacity 0, except the first one
+  slides.forEach((slide, index) => {
+    slide.style.opacity = index === 0 ? '1' : '0';
+    slide.style.visibility = 'visible';
+    slide.style.zIndex = index === 0 ? '1' : '0';
+  });
 
   function goToSlide(index) {
-    contentSlides[currentSlide].style.opacity = '0';
+    // Hide current slide
+    slides[currentSlide].style.opacity = '0';
+    slides[currentSlide].style.zIndex = '0';
+    
+    // Show new slide
     currentSlide = index;
-    contentSlides[currentSlide].style.opacity = '1';
+    slides[currentSlide].style.opacity = '1';
+    slides[currentSlide].style.zIndex = '1';
   }
 
   // Add click handlers for navigation buttons
@@ -64,12 +77,12 @@ export default function decorate(block) {
   const prevButton = block.querySelector('.btn-prev');
 
   nextButton.addEventListener('click', () => {
-    const nextIndex = (currentSlide + 1) % contentSlides.length;
+    const nextIndex = (currentSlide + 1) % slides.length;
     goToSlide(nextIndex);
   });
 
   prevButton.addEventListener('click', () => {
-    const prevIndex = (currentSlide - 1 + contentSlides.length) % contentSlides.length;
+    const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
     goToSlide(prevIndex);
   });
 } 
