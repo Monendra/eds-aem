@@ -142,10 +142,6 @@
 }
 
 @media (max-width: 768px) {
-  .carousal {
-    min-height: 100vh;
-  }
-
   .slide {
     position: relative;
     height: 100vh;
@@ -212,11 +208,6 @@
   .carousel-cta {
     margin: 20px auto 0;
     display: inline-block;
-  }
-
-  .btn {
-    padding: 15px;
-    font-size: 20px;
   }
 }
 
