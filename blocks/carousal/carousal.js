@@ -82,11 +82,21 @@ export default function decorate(block) {
 
   // Add background image for mobile view
   function setMobileBackground() {
-    const slides = document.querySelectorAll('.slide');
     slides.forEach(slide => {
       const img = slide.querySelector('.carousel-image img');
       if (img && window.innerWidth <= 768) {
-        slide.style.backgroundImage = `url(${img.src})`;
+        // Get the highest resolution image from srcset if available
+        const sourceTags = slide.querySelectorAll('.carousel-image source');
+        let highestResUrl = img.src;
+        
+        sourceTags.forEach(source => {
+          const srcset = source.srcset;
+          if (srcset && srcset.includes('2000')) {
+            highestResUrl = srcset.split(' ')[0];
+          }
+        });
+        
+        slide.style.backgroundImage = `url(${highestResUrl})`;
       } else {
         slide.style.backgroundImage = 'none';
       }
