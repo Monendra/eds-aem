@@ -54,22 +54,16 @@ export default function decorate(block) {
   let currentSlide = 0;
   const slides = [...block.querySelectorAll('.slide')];
   
-  // Make all slides visible but with opacity 0, except the first one
-  slides.forEach((slide, index) => {
-    slide.style.opacity = index === 0 ? '1' : '0';
-    slide.style.visibility = 'visible';
-    slide.style.zIndex = index === 0 ? '1' : '0';
-  });
+  // Make first slide active
+  slides[0].classList.add('active');
 
   function goToSlide(index) {
-    // Hide current slide
-    slides[currentSlide].style.opacity = '0';
-    slides[currentSlide].style.zIndex = '0';
+    // Remove active class from current slide
+    slides[currentSlide].classList.remove('active');
     
-    // Show new slide
+    // Add active class to new slide
     currentSlide = index;
-    slides[currentSlide].style.opacity = '1';
-    slides[currentSlide].style.zIndex = '1';
+    slides[currentSlide].classList.add('active');
   }
 
   // Add click handlers for navigation buttons
