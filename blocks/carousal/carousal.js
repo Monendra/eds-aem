@@ -1,4 +1,7 @@
 export default function decorate(block) {
+  // Add carousel class to block
+  block.classList.add('carousal');
+  
   const rows = [...block.children];
   
   [...block.children].forEach((row, r) => {
@@ -64,6 +67,11 @@ export default function decorate(block) {
     // Add active class to new slide
     currentSlide = index;
     slides[currentSlide].classList.add('active');
+
+    // Update background image for mobile
+    if (window.innerWidth <= 768) {
+      setMobileBackground(slides[currentSlide]);
+    }
   }
 
   // Add click handlers for navigation buttons
@@ -81,19 +89,40 @@ export default function decorate(block) {
   });
 
   // Add background image for mobile view
-  function setMobileBackground() {
-    const slides = document.querySelectorAll('.slide');
+  function setMobileBackground(slide) {
+    const img = slide.querySelector('.carousel-image img');
+    if (img && window.innerWidth <= 768) {
+      slide.style.backgroundImage = `url(${img.src})`;
+    } else {
+      slide.style.backgroundImage = 'none';
+    }
+  }
+
+  // Initial setup for mobile
+  if (window.innerWidth <= 768) {
     slides.forEach(slide => {
       const img = slide.querySelector('.carousel-image img');
-      if (img && window.innerWidth <= 768) {
-        slide.style.backgroundImage = `url(${img.src})`;
-      } else {
-        slide.style.backgroundImage = 'none';
+      if (img) {
+        // Preload image
+        const tempImg = new Image();
+        tempImg.src = img.src;
+        tempImg.onload = () => {
+          if (slide.classList.contains('active')) {
+            setMobileBackground(slide);
+          }
+        };
       }
     });
   }
 
-  // Call on load and resize
-  setMobileBackground();
-  window.addEventListener('resize', setMobileBackground);
+  // Handle resize
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768) {
+      setMobileBackground(slides[currentSlide]);
+    } else {
+      slides.forEach(slide => {
+        slide.style.backgroundImage = 'none';
+      });
+    }
+  });
 } 
