@@ -44,17 +44,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease-in-out;
   display: none;
 }
 
 .slide.active {
-  opacity: 1;
-  visibility: visible;
-  z-index: 1;
   display: block;
+  z-index: 1;
 }
 
 /* Content styling */
@@ -74,9 +69,6 @@
 .slide-image {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .carousel-heading {
@@ -144,13 +136,16 @@
 @media (max-width: 768px) {
   .carousal {
     height: 100vh;
-    min-height: 660px;
   }
 
   .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    background-size: cover !important;
-    background-position: center !important;
+    background-size: cover;
+    background-position: center;
   }
 
   .slide.active {
@@ -158,71 +153,61 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding: 40px 20px;
+    padding-bottom: 60px;
   }
 
   .slide-text {
     position: relative;
-    padding: 0;
+    padding: 20px;
     max-width: 100%;
     width: 100%;
-    height: auto;
     text-align: center;
+    background: rgba(0, 0, 0, 0.5);
     color: white;
-    background: none;
-    margin-top: auto;
+  }
+
+  .carousel-heading {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .carousel p {
+    color: white;
+    font-size: 16px;
+    margin: 15px 0;
   }
 
   .slide-image {
     display: none;
   }
 
-  .carousel-heading {
-    font-size: 36px;
-    margin-bottom: 15px;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  }
-
-  .carousel p {
-    font-size: 16px;
-    margin: 15px 0;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  }
-
   .carousel-cta {
     margin: 20px auto 0;
     display: inline-block;
-    background-color: #2940D3;
+    background: #2940D3;
     color: white;
-    padding: 16px 48px;
-    border-radius: 30px;
-    font-size: 16px;
-    text-transform: uppercase;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
   }
 }
 
 @media (max-width: 480px) {
-  .carousal {
-    min-height: 560px;
-  }
-
-  .slide.active {
-    padding: 30px 15px;
+  .slide-text {
+    padding: 15px;
   }
 
   .carousel-heading {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .carousel p {
     font-size: 14px;
-    margin: 12px 0;
   }
 
   .carousel-cta {
-    padding: 14px 36px;
+    padding: 10px 25px;
     font-size: 14px;
   }
 

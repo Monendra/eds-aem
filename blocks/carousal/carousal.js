@@ -1,7 +1,4 @@
 export default function decorate(block) {
-  // Add carousel class to block
-  block.classList.add('carousal');
-  
   const rows = [...block.children];
   
   [...block.children].forEach((row, r) => {
@@ -47,17 +44,6 @@ export default function decorate(block) {
           const picture = col.querySelector('picture');
           if (picture) {
             picture.classList.add('carousel-image');
-            // Preload image for mobile background
-            const img = picture.querySelector('img');
-            if (img) {
-              const tempImg = new Image();
-              tempImg.src = img.src;
-              tempImg.onload = () => {
-                if (window.innerWidth <= 768) {
-                  row.style.backgroundImage = `url(${img.src})`;
-                }
-              };
-            }
           }
         }
       });
@@ -94,17 +80,20 @@ export default function decorate(block) {
     goToSlide(prevIndex);
   });
 
-  // Handle resize
-  window.addEventListener('resize', () => {
+  // Add background image for mobile view
+  function setMobileBackground() {
+    const slides = document.querySelectorAll('.slide');
     slides.forEach(slide => {
       const img = slide.querySelector('.carousel-image img');
-      if (img) {
-        if (window.innerWidth <= 768) {
-          slide.style.backgroundImage = `url(${img.src})`;
-        } else {
-          slide.style.backgroundImage = 'none';
-        }
+      if (img && window.innerWidth <= 768) {
+        slide.style.backgroundImage = `url(${img.src})`;
+      } else {
+        slide.style.backgroundImage = 'none';
       }
     });
-  });
+  }
+
+  // Call on load and resize
+  setMobileBackground();
+  window.addEventListener('resize', setMobileBackground);
 } 
