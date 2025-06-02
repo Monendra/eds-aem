@@ -149,18 +149,23 @@
   .slide {
     position: relative;
     height: 100vh;
+    display: flex;
+    align-items: center;
   }
 
   .slide-text {
     position: absolute;
     padding: 40px 20px;
     max-width: 100%;
-    background: rgba(255, 255, 255, 0.9);
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
     min-height: auto;
     height: auto;
-    bottom: 0;
-    top: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
     z-index: 2;
+    text-align: center;
   }
 
   .slide-image {
@@ -178,24 +183,25 @@
   }
 
   .carousel-image img {
-    height: 100%;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
     object-position: center;
   }
 
   .carousel-heading {
     font-size: 32px;
-    text-align: center;
+    margin-bottom: 15px;
   }
 
   .carousel p {
     font-size: 16px;
-    text-align: center;
+    margin: 15px 0;
   }
 
   .carousel-cta {
-    align-self: center;
-    padding: 14px 28px;
-    font-size: 14px;
+    margin: 20px auto 0;
+    display: inline-block;
   }
 
   .btn {
@@ -215,7 +221,12 @@
 
   .carousel p {
     font-size: 14px;
-    margin: 16px 0 24px;
+    margin: 12px 0;
+  }
+
+  .carousel-cta {
+    padding: 12px 24px;
+    font-size: 14px;
   }
 
   .btn {
