@@ -47,6 +47,17 @@ export default function decorate(block) {
           const picture = col.querySelector('picture');
           if (picture) {
             picture.classList.add('carousel-image');
+            // Preload image for mobile background
+            const img = picture.querySelector('img');
+            if (img) {
+              const tempImg = new Image();
+              tempImg.src = img.src;
+              tempImg.onload = () => {
+                if (window.innerWidth <= 768) {
+                  row.style.backgroundImage = `url(${img.src})`;
+                }
+              };
+            }
           }
         }
       });
@@ -67,11 +78,6 @@ export default function decorate(block) {
     // Add active class to new slide
     currentSlide = index;
     slides[currentSlide].classList.add('active');
-
-    // Update background image for mobile
-    if (window.innerWidth <= 768) {
-      setMobileBackground(slides[currentSlide]);
-    }
   }
 
   // Add click handlers for navigation buttons
@@ -88,41 +94,17 @@ export default function decorate(block) {
     goToSlide(prevIndex);
   });
 
-  // Add background image for mobile view
-  function setMobileBackground(slide) {
-    const img = slide.querySelector('.carousel-image img');
-    if (img && window.innerWidth <= 768) {
-      slide.style.backgroundImage = `url(${img.src})`;
-    } else {
-      slide.style.backgroundImage = 'none';
-    }
-  }
-
-  // Initial setup for mobile
-  if (window.innerWidth <= 768) {
+  // Handle resize
+  window.addEventListener('resize', () => {
     slides.forEach(slide => {
       const img = slide.querySelector('.carousel-image img');
       if (img) {
-        // Preload image
-        const tempImg = new Image();
-        tempImg.src = img.src;
-        tempImg.onload = () => {
-          if (slide.classList.contains('active')) {
-            setMobileBackground(slide);
-          }
-        };
+        if (window.innerWidth <= 768) {
+          slide.style.backgroundImage = `url(${img.src})`;
+        } else {
+          slide.style.backgroundImage = 'none';
+        }
       }
     });
-  }
-
-  // Handle resize
-  window.addEventListener('resize', () => {
-    if (window.innerWidth <= 768) {
-      setMobileBackground(slides[currentSlide]);
-    } else {
-      slides.forEach(slide => {
-        slide.style.backgroundImage = 'none';
-      });
-    }
   });
 } 
