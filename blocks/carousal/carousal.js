@@ -85,4 +85,21 @@ export default function decorate(block) {
     const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
     goToSlide(prevIndex);
   });
+
+  // Add background image for mobile view
+  function setMobileBackground() {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(slide => {
+      const img = slide.querySelector('.carousel-image img');
+      if (img && window.innerWidth <= 768) {
+        slide.style.backgroundImage = `url(${img.src})`;
+      } else {
+        slide.style.backgroundImage = 'none';
+      }
+    });
+  }
+
+  // Call on load and resize
+  setMobileBackground();
+  window.addEventListener('resize', setMobileBackground);
 } 
