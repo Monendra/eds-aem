@@ -1,35 +1,42 @@
 export default function decorate(block) {
   const rows = [...block.children];
   
+  // Create navigation dots container
+  const dotsContainer = document.createElement('div');
+  dotsContainer.classList.add('dots-container');
+  
+  // Process rows and create slides
+  let slideCount = 0;
   [...block.children].forEach((row, r) => {
-    if (r === 0) {
-      // Create next button using authored content
-      const nextBtn = document.createElement('button');
-      nextBtn.classList.add('btn', 'btn-next');
-      const nextContent = row.textContent.trim();
-      const nextNode = document.createTextNode(nextContent);
-      nextBtn.append(nextNode);
-      row.replaceWith(nextBtn);
-    } else if (r === rows.length - 1) {
-      // Create previous button using authored content
-      const prevBtn = document.createElement('button');
-      prevBtn.classList.add('btn', 'btn-prev');
-      const prevContent = row.textContent.trim();
-      const prevNode = document.createTextNode(prevContent);
-      prevBtn.append(prevNode);
-      row.replaceWith(prevBtn);
+    if (r === 0 || r === rows.length - 1) {
+      // We'll replace the navigation buttons with dots, so remove these rows
+      row.remove();
     } else {
       row.classList.add('slide');
+      slideCount++;
+      
       [...row.children].forEach((col, c) => {
         if (c === 0) {
           col.classList.add('slide-text');
+          
+          // Create inner container for text (for mobile gradient background)
+          const textInner = document.createElement('div');
+          textInner.classList.add('slide-text-inner');
+          
+          // Move all content to the inner container
+          while (col.firstChild) {
+            textInner.appendChild(col.firstChild);
+          }
+          
+          col.appendChild(textInner);
+          
           // Style headings and CTA
-          const headings = col.querySelectorAll('h2');
+          const headings = textInner.querySelectorAll('h2');
           headings.forEach((h2) => {
             h2.classList.add('carousel-heading');
           });
 
-          const cta = col.querySelector('h3');
+          const cta = textInner.querySelector('h3');
           if (cta) {
             cta.classList.add('carousel-cta');
             cta.addEventListener('click', (e) => {
@@ -49,61 +56,129 @@ export default function decorate(block) {
       });
     }
   });
+  
+  // Create dots for navigation
+  const slides = [...block.querySelectorAll('.slide')];
+  slides.forEach((_, index) => {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    dot.dataset.index = index;
+    dotsContainer.appendChild(dot);
+  });
+  
+  // Add dots container to block
+  block.appendChild(dotsContainer);
 
   // Initialize carousel functionality
   let currentSlide = 0;
-  const slides = [...block.querySelectorAll('.slide')];
   
-  // Make first slide active
+  // Make first slide and dot active
   slides[0].classList.add('active');
+  const dots = [...dotsContainer.querySelectorAll('.dot')];
+  dots[0].classList.add('active');
 
   function goToSlide(index) {
-    // Remove active class from current slide
+    // Remove active class from current slide and dot
     slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
     
-    // Add active class to new slide
+    // Add active class to new slide and dot
     currentSlide = index;
     slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
   }
 
-  // Add click handlers for navigation buttons
-  const nextButton = block.querySelector('.btn-next');
-  const prevButton = block.querySelector('.btn-prev');
+  // Add click handlers for dots
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+    });
+  });
 
-  nextButton.addEventListener('click', () => {
+  // Auto-rotate slides every 5 seconds
+  let autoSlideInterval = setInterval(() => {
     const nextIndex = (currentSlide + 1) % slides.length;
     goToSlide(nextIndex);
+  }, 5000);
+  
+  // Pause auto-rotation when user interacts with carousel
+  block.addEventListener('mouseenter', () => {
+    clearInterval(autoSlideInterval);
+  });
+  
+  block.addEventListener('mouseleave', () => {
+    autoSlideInterval = setInterval(() => {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      goToSlide(nextIndex);
+    }, 5000);
   });
 
-  prevButton.addEventListener('click', () => {
-    const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-    goToSlide(prevIndex);
-  });
-
-  // Add background image for mobile view
-  function setMobileBackground() {
+  // Handle image sizing to ensure proper fill
+  function handleImageSizing() {
+    const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+    
     slides.forEach(slide => {
       const img = slide.querySelector('.carousel-image img');
-      if (img && window.innerWidth <= 768) {
-        // Get the highest resolution image from srcset if available
-        const sourceTags = slide.querySelectorAll('.carousel-image source');
-        let highestResUrl = img.src;
-        
-        sourceTags.forEach(source => {
-          const srcset = source.srcset;
-          if (srcset && srcset.includes('2000')) {
-            highestResUrl = srcset.split(' ')[0];
+      if (img) {
+        // Ensure images load properly
+        img.onload = () => {
+          img.style.objectFit = 'cover';
+          img.style.width = '100%';
+          img.style.height = '100%';
+          
+          if (isMobile) {
+            // For mobile, ensure parent containers are sized properly
+            const slideImage = slide.querySelector('.slide-image');
+            if (slideImage) {
+              slideImage.style.height = '100%';
+              slideImage.style.position = 'absolute';
+            }
+            
+            const slideText = slide.querySelector('.slide-text');
+            if (slideText) {
+              slideText.style.height = '100%';
+              slideText.style.position = 'absolute';
+            }
+            
+            // Set appropriate height based on screen size
+            const height = isSmallMobile ? '480px' : '580px';
+            slide.style.minHeight = height;
+            slide.style.height = '100%';
           }
-        });
+        };
         
-        slide.style.backgroundImage = `url(${highestResUrl})`;
-      } else {
-        slide.style.backgroundImage = 'none';
+        // Apply styles immediately in case image is already loaded
+        img.style.objectFit = 'cover';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        
+        if (isMobile) {
+          // For mobile, ensure parent containers are sized properly
+          const slideImage = slide.querySelector('.slide-image');
+          if (slideImage) {
+            slideImage.style.height = '100%';
+            slideImage.style.position = 'absolute';
+          }
+          
+          const slideText = slide.querySelector('.slide-text');
+          if (slideText) {
+            slideText.style.height = '100%';
+            slideText.style.position = 'absolute';
+          }
+          
+          // Set appropriate height based on screen size
+          const height = isSmallMobile ? '480px' : '580px';
+          slide.style.minHeight = height;
+          slide.style.height = '100%';
+        }
       }
     });
   }
 
-  // Call on load and resize
-  setMobileBackground();
-  window.addEventListener('resize', setMobileBackground);
+  // Call immediately
+  handleImageSizing();
+  
+  // Handle window resize
+  window.addEventListener('resize', handleImageSizing);
 } 
